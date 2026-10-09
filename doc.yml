@@ -1,0 +1,161 @@
+openapi: 3.0.3
+info:
+  title: Places API
+  version: 1.0.0
+  description: Places and the users who add them. Adding a place needs a token from /login.
+servers:
+  - url: http://localhost:3000/api
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Place:
+      type: object
+      properties:
+        ID:
+          type: integer
+        Name:
+          type: string
+        UserID:
+          type: integer
+        Latitude:
+          type: number
+        Longitude:
+          type: number
+    NewPlace:
+      type: object
+      required: [name, userId, latitude, longitude]
+      properties:
+        name:
+          type: string
+          example: Test Place
+        userId:
+          type: integer
+          example: 1
+        latitude:
+          type: number
+          example: 60.17
+        longitude:
+          type: number
+          example: 24.94
+    Credentials:
+      type: object
+      required: [name, password]
+      properties:
+        name:
+          type: string
+          example: test_user
+        password:
+          type: string
+          example: abcd
+    User:
+      type: object
+      properties:
+        ID:
+          type: integer
+        Name:
+          type: string
+        Token:
+          type: string
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+paths:
+  /places:
+    get:
+      summary: All places
+      responses:
+        "200":
+          description: The places
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Place"
+    post:
+      summary: Add a place for the logged-in user
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewPlace"
+      responses:
+        "201":
+          description: Added
+        "401":
+          description: Missing or invalid token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: The token belongs to another user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /places/{id}:
+    get:
+      summary: One place
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: The place
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Place"
+        "400":
+          description: The id is not a number
+  /login:
+    post:
+      summary: Log in and get a token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Credentials"
+      responses:
+        "200":
+          description: The user, with a Token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Wrong user name or password
+  /users:
+    post:
+      summary: Register a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Credentials"
+      responses:
+        "200":
+          description: The new user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "409":
+          description: The user name is taken
