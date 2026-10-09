@@ -1,0 +1,46 @@
+GET http://localhost:3000/api/places
+###
+GET http://localhost:3000/api/places/3
+###
+POST http://localhost:3000/api/login
+content-type:application/json
+
+{
+    "name": "Nico",
+    "password": "salasana"
+}
+###
+POST http://localhost:3000/api/login
+content-type:application/json
+
+{
+    "name": "Radu",
+    "password": "password"
+}
+###
+POST http://localhost:3000/api/users
+content-type:application/json
+
+{
+    "name": "Nico",
+    "password": "salasana"
+}
+###
+POST http://localhost:3000/api/places
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgsImlhdCI6MTc5MTUyNjc3MH0.cVOsGCm4ox8YL2yZeR_K0A5hMbsp_8QiLz6v9tteVWs
+
+{
+    "name": "K-Market Ankkuri",
+    "userid": 28,
+    "latitude": 62.62023,
+    "longitude": 29.82940
+}
+###
+DELETE http://localhost:3000/api/places/38
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgsImlhdCI6MTc5MTUyNjc3MH0.cVOsGCm4ox8YL2yZeR_K0A5hMbsp_8QiLz6v9tteVWs
+###
+GET http://localhost:3000/api/users
+Content-Type: application/application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgsImlhdCI6MTc5MTUyNjc3MH0.cVOsGCm4ox8YL2yZeR_K0A5hMbsp_8QiLz6v9tteVWs
